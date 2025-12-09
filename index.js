@@ -1,8 +1,8 @@
+
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -17,11 +17,17 @@ app.use(cors({
 app.use(express.json());
 
 // Database Connection (Serverless Optimized)
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/billing_system';
+const MONGODB_URI = process.env.MONGODB_URI;
+
 let isConnected = false;
 
 const connectToDatabase = async () => {
   if (isConnected) return;
+
+  if (!MONGODB_URI) {
+    console.error('MONGODB_URI is not defined in environment variables');
+    return;
+  }
 
   try {
     const db = await mongoose.connect(MONGODB_URI);
@@ -78,7 +84,7 @@ const PonchSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// Models
+// Models - check if model exists before compiling to avoid OverwriteModelError
 const Customer = mongoose.models.Customer || mongoose.model('Customer', CustomerSchema);
 const Roznamcha = mongoose.models.Roznamcha || mongoose.model('Roznamcha', RoznamchaSchema);
 const Bill = mongoose.models.Bill || mongoose.model('Bill', BillSchema);
@@ -176,11 +182,3 @@ app.put('/api/roznamcha/:id', async (req, res) => {
 
 // Export key for Vercel
 export default app;
-
-// Local start
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const port = process.env.PORT || 3001;
-  app.listen(port, () => {
-    console.log(`Server running at http://127.0.0.1:${port}`);
-  });
-}
