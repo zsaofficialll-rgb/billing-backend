@@ -8,7 +8,6 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -16,35 +15,58 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Database Connection (Serverless Optimized)
+// --- ROBUST DATABASE CONNECTION (VERCEL OPTIMIZED) ---
 const MONGODB_URI = process.env.MONGODB_URI;
 
-let isConnected = false;
+if (!MONGODB_URI) {
+  console.error("❌ MONGODB_URI is missing in environment variables!");
+}
 
-const connectToDatabase = async () => {
-  if (isConnected) return;
+let cached = global.mongoose;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
-  if (!MONGODB_URI) {
-    console.error('MONGODB_URI is not defined in environment variables');
-    return;
+async function connectToDatabase() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false, // FAIL FAST: Don't wait 10s if disconnected
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s
+    };
+
+    console.log('Connecting to MongoDB...');
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      console.log('✅ MongoDB Connected Successfully');
+      return mongoose;
+    });
   }
 
   try {
-    const db = await mongoose.connect(MONGODB_URI);
-    isConnected = db.connections[0].readyState;
-    console.log('MongoDB Connected');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    console.error('❌ MongoDB Connection Error:', e);
+    throw e;
   }
-};
 
-// Middleware to ensure DB connection on every request
+  return cached.conn;
+}
+
+// Middleware: Connect on every request
 app.use(async (req, res, next) => {
-  await connectToDatabase();
-  next();
+  try {
+    await connectToDatabase();
+    next();
+  } catch (error) {
+    res.status(500).json({ error: `Database Connection Failed: ${error.message}` });
+  }
 });
 
-// Schemas
+// --- SCHEMAS ---
 const CustomerSchema = new mongoose.Schema({
   name: String,
   phone: String,
@@ -53,7 +75,7 @@ const CustomerSchema = new mongoose.Schema({
 });
 
 const RoznamchaSchema = new mongoose.Schema({
-  type: String, // DEBIT, CREDIT
+  type: String,
   pageNo: String,
   checkNo: String,
   name: String,
@@ -68,34 +90,27 @@ const RoznamchaSchema = new mongoose.Schema({
 
 const BillSchema = new mongoose.Schema({
   billNumber: String,
-  type: String, // Bazar Bill, Cheera Zameedara
+  type: String,
   customerId: String,
   customerName: String,
   date: String,
   items: Array,
-  totals: Object, // For Bazar Bill
-  calculations: Object, // For Cheera Zameedara
+  totals: Object,
+  calculations: Object,
   manualMazduri: String,
   itemConfig: Object,
   timestamp: { type: Date, default: Date.now }
 });
 
-const PonchSchema = new mongoose.Schema({
-  createdAt: { type: Date, default: Date.now }
-});
-
-// Models - check if model exists before compiling to avoid OverwriteModelError
+// Models (Use existing if compiled)
 const Customer = mongoose.models.Customer || mongoose.model('Customer', CustomerSchema);
 const Roznamcha = mongoose.models.Roznamcha || mongoose.model('Roznamcha', RoznamchaSchema);
 const Bill = mongoose.models.Bill || mongoose.model('Bill', BillSchema);
-const Ponch = mongoose.models.Ponch || mongoose.model('Ponch', PonchSchema);
 
-// Routes
-app.get('/', (req, res) => {
-  res.send('Billing System API is running on Vercel/MongoDB');
-});
+// --- ROUTES ---
+app.get('/', (req, res) => res.send('Billing System Backend Online (Optimized v2)'));
 
-// --- Customers ---
+// Customers
 app.get('/api/customers', async (req, res) => {
   try {
     const customers = await Customer.find();
@@ -107,7 +122,6 @@ app.post('/api/customers/upsert', async (req, res) => {
   try {
     const { name } = req.body;
     let customer = await Customer.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
-
     if (!customer) {
       customer = new Customer({ name });
       await customer.save();
@@ -116,7 +130,7 @@ app.post('/api/customers/upsert', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// --- Bills ---
+// Bills
 app.get('/api/bills', async (req, res) => {
   try {
     const bills = await Bill.find();
@@ -124,20 +138,9 @@ app.get('/api/bills', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.get('/api/bills/:id', async (req, res) => {
-  try {
-    const bill = await Bill.findById(req.params.id);
-    if (!bill) return res.status(404).json({ error: 'Bill not found' });
-    res.json(bill);
-  } catch (e) { res.status(500).json({ error: e.message }); }
-});
-
 app.post('/api/bills', async (req, res) => {
   try {
-    const bill = new Bill({
-      ...req.body,
-      billNumber: `BILL-${Date.now()}`
-    });
+    const bill = new Bill({ ...req.body, billNumber: `BILL-${Date.now()}` });
     await bill.save();
     res.json(bill);
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -150,7 +153,7 @@ app.delete('/api/bills/:id', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// --- Roznamcha ---
+// Roznamcha
 app.get('/api/roznamcha', async (req, res) => {
   try {
     const entries = await Roznamcha.find();
@@ -180,5 +183,5 @@ app.put('/api/roznamcha/:id', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Export key for Vercel
+// Export default for Vercel
 export default app;
