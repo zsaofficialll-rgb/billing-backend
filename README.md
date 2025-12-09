@@ -24,3 +24,4 @@ Deployed on Railway.app
 
 ## Database
 Uses LowDB (JSON file-based database)
+
