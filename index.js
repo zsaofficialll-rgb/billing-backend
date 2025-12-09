@@ -130,6 +130,13 @@ app.post('/api/customers/upsert', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+app.delete('/api/customers/:id', async (req, res) => {
+  try {
+    await Customer.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Bills
 app.get('/api/bills', async (req, res) => {
   try {
