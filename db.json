@@ -1,0 +1,448 @@
+{
+  "transactions": [],
+  "customers": [
+    {
+      "id": 1764487431600,
+      "name": "Hassan ",
+      "createdAt": "2025-11-30T07:23:51.600Z"
+    },
+    {
+      "id": 1764527050821,
+      "name": "lst",
+      "phone": "",
+      "address": ""
+    },
+    {
+      "id": 1764941685146,
+      "name": "Test Debug Customer",
+      "createdAt": "2025-12-05T13:34:45.146Z"
+    },
+    {
+      "id": 1764941823993,
+      "name": "ls",
+      "createdAt": "2025-12-05T13:37:03.993Z"
+    },
+    {
+      "id": 1764942337381,
+      "name": "li",
+      "createdAt": "2025-12-05T13:45:37.381Z"
+    },
+    {
+      "id": 1764957093076,
+      "name": "Mustafa",
+      "createdAt": "2025-12-05T17:51:33.076Z"
+    },
+    {
+      "id": 1765035908793,
+      "name": "Ali",
+      "createdAt": "2025-12-06T15:45:08.793Z"
+    }
+  ],
+  "roznamcha": [
+    {
+      "id": 1764949404491,
+      "type": "CREDIT",
+      "pageNo": "",
+      "checkNo": "",
+      "name": "lst",
+      "description": "چیک",
+      "debit": "",
+      "credit": "300000",
+      "date": "2025-12-05",
+      "entryCode": "342881",
+      "amount": 300000
+    }
+  ],
+  "bills": [
+    {
+      "id": 1764527648446,
+      "billNumber": "BILL-1764527648446",
+      "type": "Bazar Bill",
+      "customerId": 1764527050821,
+      "customerName": "lst",
+      "date": "2025-11-30",
+      "items": [
+        {
+          "item": "چھوہارا",
+          "quantity": "10",
+          "weightKg": "10",
+          "weightMan": "20",
+          "rate": "4500",
+          "totalWeightKg": 810,
+          "totalWeightMan": 20.25,
+          "baseAmount": 91125,
+          "id": 1764527641797
+        }
+      ],
+      "totals": {
+        "itemsTotal": 91125,
+        "totalBardana": 2000,
+        "totalMazduri": 0,
+        "grandTotal": 93125
+      },
+      "manualMazduri": "",
+      "timestamp": "2025-11-30T18:34:08.442Z"
+    },
+    {
+      "id": 1764941824002,
+      "billNumber": "BILL-1764941824002",
+      "type": "Cheera Zameedara",
+      "customerId": 1764941823993,
+      "customerName": "ls",
+      "date": "2025-12-05",
+      "items": [
+        {
+          "item": "خجور",
+          "quantity": "5",
+          "weightKg": "10",
+          "weightMan": "14",
+          "rate": "4500",
+          "totalWeightKg": 570,
+          "totalWeightMan": 14.25,
+          "baseAmount": 64125,
+          "bardanaTotal": 0,
+          "subtotal": 64125,
+          "itemConfig": {
+            "name": "خجور (Khajoor)",
+            "bardana": 0,
+            "mazduri": 50
+          }
+        }
+      ],
+      "calculations": {
+        "totalBaseAmount": 64125,
+        "totalBardana": 0,
+        "totalSubtotal": 64125,
+        "commission": 6412.5,
+        "bt": 384.75,
+        "totalMazduri": 250,
+        "dalali": 641.25,
+        "marketFee": 5,
+        "totalCharges": 7693.5,
+        "netAmount": 56431.5
+      },
+      "timestamp": "2025-12-05T13:37:03.998Z"
+    },
+    {
+      "id": 1764948772266,
+      "billNumber": "BILL-1764948772266",
+      "type": "Bazar Bill",
+      "customerId": 1764526298384,
+      "customerName": "ali",
+      "date": "2025-12-05",
+      "items": [
+        {
+          "item": "چھوہارا",
+          "quantity": "8",
+          "weightKg": "16",
+          "weightMan": "20",
+          "rate": "4500",
+          "totalWeightKg": 816,
+          "totalWeightMan": 20.4,
+          "baseAmount": 91800,
+          "id": 1764948727074
+        }
+      ],
+      "totals": {
+        "itemsTotal": 91800,
+        "totalBardana": 1600,
+        "totalMazduri": 0,
+        "grandTotal": 93400
+      },
+      "manualMazduri": "",
+      "timestamp": "2025-12-05T15:32:52.261Z"
+    },
+    {
+      "id": 1764948920313,
+      "billNumber": "BILL-1764948920313",
+      "type": "Cheera Zameedara",
+      "customerId": 1764526298384,
+      "customerName": "ali",
+      "date": "2025-12-05",
+      "items": [
+        {
+          "item": "چھوہارا",
+          "quantity": "8",
+          "weightKg": "16",
+          "weightMan": "20",
+          "rate": "4500",
+          "totalWeightKg": 816,
+          "totalWeightMan": 20.4,
+          "baseAmount": 91800,
+          "bardanaTotal": 1600,
+          "subtotal": 93400,
+          "itemConfig": {
+            "name": "چھوہارا (Chuwahra)",
+            "bardana": 200,
+            "mazduri": 70
+          }
+        }
+      ],
+      "calculations": {
+        "totalBaseAmount": 91800,
+        "totalBardana": 1600,
+        "totalSubtotal": 93400,
+        "commission": 9340,
+        "bt": 560.4,
+        "totalMazduri": 560,
+        "dalali": 934,
+        "marketFee": 8,
+        "totalCharges": 11402.4,
+        "netAmount": 81997.6
+      },
+      "timestamp": "2025-12-05T15:35:20.309Z"
+    },
+    {
+      "id": 1764949113660,
+      "billNumber": "BILL-1764949113660",
+      "type": "Bazar Bill",
+      "customerId": 1764527050821,
+      "customerName": "lst",
+      "date": "2025-12-05",
+      "items": [
+        {
+          "item": "چھوہارا",
+          "quantity": "8",
+          "weightKg": "16",
+          "weightMan": "20",
+          "rate": "4497",
+          "totalWeightKg": 816,
+          "totalWeightMan": 20.4,
+          "baseAmount": 91738.79999999999,
+          "id": 1764949099046
+        }
+      ],
+      "totals": {
+        "itemsTotal": 91738.79999999999,
+        "totalBardana": 1600,
+        "totalMazduri": 0,
+        "grandTotal": 93338.79999999999
+      },
+      "manualMazduri": "",
+      "timestamp": "2025-12-05T15:38:33.657Z"
+    },
+    {
+      "id": 1764952214545,
+      "billNumber": "BILL-1764952214545",
+      "type": "Bazar Bill",
+      "customerId": 1764952214532,
+      "customerName": "TestCustomer",
+      "date": "2025-12-05",
+      "items": [
+        {
+          "item": "خجور",
+          "quantity": "5",
+          "weightKg": "100",
+          "weightMan": "",
+          "rate": "5000",
+          "totalWeightKg": 100,
+          "totalWeightMan": 2.5,
+          "baseAmount": 12500,
+          "id": 1764952157099
+        }
+      ],
+      "totals": {
+        "itemsTotal": 12500,
+        "totalBardana": 0,
+        "totalMazduri": 0,
+        "grandTotal": 12500
+      },
+      "manualMazduri": "0",
+      "timestamp": "2025-12-05T16:30:14.540Z"
+    },
+    {
+      "id": 1764957093084,
+      "billNumber": "BILL-1764957093084",
+      "type": "Cheera Zameedara",
+      "customerId": 1764957093076,
+      "customerName": "Mustafa",
+      "date": "2025-12-05",
+      "items": [
+        {
+          "item": "چھوہارا",
+          "quantity": "5",
+          "weightKg": "10",
+          "weightMan": "20",
+          "rate": "4500",
+          "totalWeightKg": 810,
+          "totalWeightMan": 20.25,
+          "baseAmount": 91125,
+          "bardanaTotal": 1000,
+          "subtotal": 92125,
+          "itemConfig": {
+            "name": "چھوہارا (Chuwahra)",
+            "bardana": 200,
+            "mazduri": 70
+          }
+        }
+      ],
+      "calculations": {
+        "totalBaseAmount": 91125,
+        "totalBardana": 1000,
+        "totalSubtotal": 92125,
+        "commission": 9212.5,
+        "bt": 552.75,
+        "totalMazduri": 350,
+        "dalali": 921.25,
+        "marketFee": 5,
+        "totalCharges": 11041.5,
+        "netAmount": 81083.5
+      },
+      "timestamp": "2025-12-05T17:51:33.081Z"
+    },
+    {
+      "id": 1764957153491,
+      "billNumber": "BILL-1764957153491",
+      "type": "Bazar Bill",
+      "customerId": 1764957093076,
+      "customerName": "mustafa",
+      "date": "2025-12-05",
+      "items": [
+        {
+          "item": "اجوائن",
+          "quantity": "4",
+          "weightKg": "10",
+          "weightMan": "20",
+          "rate": "5500",
+          "totalWeightKg": 810,
+          "totalWeightMan": 20.25,
+          "baseAmount": 111375,
+          "id": 1764957148009
+        }
+      ],
+      "totals": {
+        "itemsTotal": 111375,
+        "totalBardana": 140,
+        "totalMazduri": 0,
+        "grandTotal": 111515
+      },
+      "manualMazduri": "",
+      "timestamp": "2025-12-05T17:52:33.488Z"
+    },
+    {
+      "id": 1764957617569,
+      "billNumber": "BILL-1764957617569",
+      "type": "Bazar Bill",
+      "customerId": 1764957617561,
+      "customerName": "MMB TRADER ",
+      "date": "2025-12-05",
+      "items": [
+        {
+          "item": "چھوہارا",
+          "quantity": "5",
+          "weightKg": "10",
+          "weightMan": "20",
+          "rate": "5500",
+          "totalWeightKg": 810,
+          "totalWeightMan": 20.25,
+          "baseAmount": 111375,
+          "id": 1764957443347
+        }
+      ],
+      "totals": {
+        "itemsTotal": 111375,
+        "totalBardana": 1000,
+        "totalMazduri": 0,
+        "grandTotal": 112375
+      },
+      "manualMazduri": "",
+      "timestamp": "2025-12-05T18:00:17.566Z"
+    },
+    {
+      "id": 1765032042919,
+      "billNumber": "BILL-1765032042919",
+      "customerName": "Test",
+      "items": [
+        {
+          "item": "Khajoor",
+          "weight": 100,
+          "rate": 50
+        }
+      ],
+      "totals": {
+        "grandTotal": 5000
+      }
+    },
+    {
+      "id": 1765035909396,
+      "billNumber": "BILL-1765035909396",
+      "type": "Cheera Zameedara",
+      "customerId": 1765035908793,
+      "customerName": "Ali",
+      "date": "2025-12-06",
+      "items": [
+        {
+          "item": "خجور",
+          "quantity": "5",
+          "weightKg": "48",
+          "weightMan": "80",
+          "rate": "8808",
+          "totalWeightKg": 3248,
+          "totalWeightMan": 81.2,
+          "baseAmount": 715209.6,
+          "bardanaTotal": 0,
+          "subtotal": 715209.6,
+          "itemConfig": {
+            "name": "خجور (Khajoor)",
+            "bardana": 0,
+            "mazduri": 50
+          }
+        }
+      ],
+      "calculations": {
+        "totalBaseAmount": 715209.6,
+        "totalBardana": 0,
+        "totalSubtotal": 715209.6,
+        "commission": 71520.96,
+        "bt": 4291.2576,
+        "totalMazduri": 250,
+        "dalali": 7152.096,
+        "marketFee": 5,
+        "totalCharges": 83219.31360000001,
+        "netAmount": 631990.2864
+      },
+      "timestamp": "2025-12-06T15:45:07.770Z"
+    },
+    {
+      "id": 1765036004544,
+      "billNumber": "BILL-1765036004544",
+      "type": "Cheera Zameedara",
+      "customerId": 1765035908793,
+      "customerName": "Ali",
+      "date": "2025-12-06",
+      "items": [
+        {
+          "item": "خجور",
+          "quantity": "58",
+          "weightKg": "88",
+          "weightMan": "555",
+          "rate": "5800",
+          "totalWeightKg": 22288,
+          "totalWeightMan": 557.2,
+          "baseAmount": 3231760.0000000005,
+          "bardanaTotal": 0,
+          "subtotal": 3231760.0000000005,
+          "itemConfig": {
+            "name": "خجور (Khajoor)",
+            "bardana": 0,
+            "mazduri": 50
+          }
+        }
+      ],
+      "calculations": {
+        "totalBaseAmount": 3231760.0000000005,
+        "totalBardana": 0,
+        "totalSubtotal": 3231760.0000000005,
+        "commission": 323176.00000000006,
+        "bt": 19390.560000000005,
+        "totalMazduri": 2900,
+        "dalali": 32317.600000000006,
+        "marketFee": 58,
+        "totalCharges": 377842.1600000001,
+        "netAmount": 2853917.8400000003
+      },
+      "timestamp": "2025-12-06T15:46:42.902Z"
+    }
+  ],
+  "ponch": []
+}

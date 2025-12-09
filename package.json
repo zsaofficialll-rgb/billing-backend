@@ -1,0 +1,26 @@
+{
+  "name": "billing-system-server",
+  "version": "1.0.0",
+  "description": "Billing Management System Backend",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "keywords": [
+    "billing",
+    "management",
+    "backend"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "lowdb": "^7.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
