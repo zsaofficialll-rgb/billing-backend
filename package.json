@@ -17,8 +17,10 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "lowdb": "^7.0.1"
+    "lowdb": "^7.0.1",
+    "mongoose": "^9.0.1"
   },
   "engines": {
     "node": ">=18.0.0"
