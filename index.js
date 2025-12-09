@@ -1,16 +1,42 @@
-
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
-// Connect to MongoDB
+const app = express();
+
+// Middleware
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type']
+}));
+app.use(express.json());
+
+// Database Connection (Serverless Optimized)
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/billing_system';
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+let isConnected = false;
+
+const connectToDatabase = async () => {
+  if (isConnected) return;
+
+  try {
+    const db = await mongoose.connect(MONGODB_URI);
+    isConnected = db.connections[0].readyState;
+    console.log('MongoDB Connected');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+  }
+};
+
+// Middleware to ensure DB connection on every request
+app.use(async (req, res, next) => {
+  await connectToDatabase();
+  next();
+});
 
 // Schemas
 const CustomerSchema = new mongoose.Schema({
@@ -49,127 +75,112 @@ const BillSchema = new mongoose.Schema({
 });
 
 const PonchSchema = new mongoose.Schema({
-  // Define fields as needed
   createdAt: { type: Date, default: Date.now }
 });
 
 // Models
-const Customer = mongoose.model('Customer', CustomerSchema);
-const Roznamcha = mongoose.model('Roznamcha', RoznamchaSchema);
-const Bill = mongoose.model('Bill', BillSchema);
-const Ponch = mongoose.model('Ponch', PonchSchema);
+const Customer = mongoose.models.Customer || mongoose.model('Customer', CustomerSchema);
+const Roznamcha = mongoose.models.Roznamcha || mongoose.model('Roznamcha', RoznamchaSchema);
+const Bill = mongoose.models.Bill || mongoose.model('Bill', BillSchema);
+const Ponch = mongoose.models.Ponch || mongoose.model('Ponch', PonchSchema);
 
-// Start server function
-export async function startServer(port = 3001) {
-  const app = express();
+// Routes
+app.get('/', (req, res) => {
+  res.send('Billing System API is running on Vercel/MongoDB');
+});
 
-  // Middleware
-  app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type']
-  }));
-  app.use(express.json());
+// --- Customers ---
+app.get('/api/customers', async (req, res) => {
+  try {
+    const customers = await Customer.find();
+    res.json(customers);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-  // Routes
-  app.get('/', (req, res) => {
-    res.send('Billing System API is running on Cloud DB');
-  });
+app.post('/api/customers/upsert', async (req, res) => {
+  try {
+    const { name } = req.body;
+    let customer = await Customer.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
 
-  // --- Customers ---
-  app.get('/api/customers', async (req, res) => {
-    try {
-      const customers = await Customer.find();
-      res.json(customers);
-    } catch (e) { res.status(500).json({ error: e.message }); }
-  });
+    if (!customer) {
+      customer = new Customer({ name });
+      await customer.save();
+    }
+    res.json(customer);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-  app.post('/api/customers/upsert', async (req, res) => {
-    try {
-      const { name } = req.body;
-      let customer = await Customer.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
+// --- Bills ---
+app.get('/api/bills', async (req, res) => {
+  try {
+    const bills = await Bill.find();
+    res.json(bills);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-      if (!customer) {
-        customer = new Customer({ name });
-        await customer.save();
-      }
-      res.json(customer);
-    } catch (e) { res.status(500).json({ error: e.message }); }
-  });
+app.get('/api/bills/:id', async (req, res) => {
+  try {
+    const bill = await Bill.findById(req.params.id);
+    if (!bill) return res.status(404).json({ error: 'Bill not found' });
+    res.json(bill);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-  // --- Bills ---
-  app.get('/api/bills', async (req, res) => {
-    try {
-      const bills = await Bill.find();
-      res.json(bills);
-    } catch (e) { res.status(500).json({ error: e.message }); }
-  });
+app.post('/api/bills', async (req, res) => {
+  try {
+    const bill = new Bill({
+      ...req.body,
+      billNumber: `BILL-${Date.now()}`
+    });
+    await bill.save();
+    res.json(bill);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-  app.get('/api/bills/:id', async (req, res) => {
-    try {
-      const bill = await Bill.findById(req.params.id);
-      if (!bill) return res.status(404).json({ error: 'Bill not found' });
-      res.json(bill);
-    } catch (e) { res.status(500).json({ error: e.message }); }
-  });
+app.delete('/api/bills/:id', async (req, res) => {
+  try {
+    await Bill.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-  app.post('/api/bills', async (req, res) => {
-    try {
-      const bill = new Bill({
-        ...req.body,
-        billNumber: `BILL-${Date.now()}`
-      });
-      await bill.save();
-      res.json(bill);
-    } catch (e) { res.status(500).json({ error: e.message }); }
-  });
+// --- Roznamcha ---
+app.get('/api/roznamcha', async (req, res) => {
+  try {
+    const entries = await Roznamcha.find();
+    res.json(entries);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-  app.delete('/api/bills/:id', async (req, res) => {
-    try {
-      await Bill.findByIdAndDelete(req.params.id);
-      res.json({ success: true });
-    } catch (e) { res.status(500).json({ error: e.message }); }
-  });
+app.post('/api/roznamcha', async (req, res) => {
+  try {
+    const entry = new Roznamcha(req.body);
+    await entry.save();
+    res.json(entry);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-  // --- Roznamcha ---
-  app.get('/api/roznamcha', async (req, res) => {
-    try {
-      const entries = await Roznamcha.find();
-      res.json(entries);
-    } catch (e) { res.status(500).json({ error: e.message }); }
-  });
+app.delete('/api/roznamcha/:id', async (req, res) => {
+  try {
+    await Roznamcha.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-  app.post('/api/roznamcha', async (req, res) => {
-    try {
-      const entry = new Roznamcha(req.body);
-      await entry.save();
-      res.json(entry);
-    } catch (e) { res.status(500).json({ error: e.message }); }
-  });
+app.put('/api/roznamcha/:id', async (req, res) => {
+  try {
+    const entry = await Roznamcha.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(entry);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-  app.delete('/api/roznamcha/:id', async (req, res) => {
-    try {
-      await Roznamcha.findByIdAndDelete(req.params.id);
-      res.json({ success: true });
-    } catch (e) { res.status(500).json({ error: e.message }); }
-  });
+// Export key for Vercel
+export default app;
 
-  app.put('/api/roznamcha/:id', async (req, res) => {
-    try {
-      const entry = await Roznamcha.findByIdAndUpdate(req.params.id, req.body, { new: true });
-      res.json(entry);
-    } catch (e) { res.status(500).json({ error: e.message }); }
-  });
-
-  // Listen
-  const server = app.listen(port, '0.0.0.0', () => {
+// Local start
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const port = process.env.PORT || 3001;
+  app.listen(port, () => {
     console.log(`Server running at http://127.0.0.1:${port}`);
   });
-  return server;
-}
-
-// Check if running directly
-import { fileURLToPath } from 'url';
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  startServer(process.env.PORT || 3001);
 }
