@@ -16,7 +16,7 @@ app.use(cors({
 app.use(express.json());
 
 // --- ROBUST DATABASE CONNECTION (VERCEL OPTIMIZED) ---
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://superadmin:super123@cluster0.kkfbjfx.mongodb.net/billing_system?retryWrites=true&w=majority';
 
 if (!MONGODB_URI) {
   console.error("❌ MONGODB_URI is missing in environment variables!");

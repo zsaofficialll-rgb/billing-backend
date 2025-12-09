@@ -15,7 +15,7 @@ import mongoose from 'mongoose';
 // I don't have access to Vercel env vars.
 // But I can try to guess or ask them.
 
-const uri = 'mongodb+srv://admin:password123@cluster0.kkfbjfx.mongodb.net/billing_system?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://superadmin:super123@cluster0.kkfbjfx.mongodb.net/billing_system?retryWrites=true&w=majority';
 
 console.log('Testing connection to:', uri.replace(/:([^:@]+)@/, ':****@'));
 
